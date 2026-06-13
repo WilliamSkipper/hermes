@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Hermes — Media Downloader</title>
+    <meta name="description"
+        content="Hermes — fast YouTube media downloader. Save as MP4, MP3 with art, or simple audio." />
+    <meta name="theme-color" content="#e8a020" />
+    <link rel="stylesheet" href="/public/css/main.css" />
+    <link rel="stylesheet" href="/public/css/auth.css" />
+    <script>
+        (function () {
+            const t = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+</head>
+
+<body>
+
+    <!-- ── Auth Gate ── -->
+    <div id="auth-gate">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-lock">🔑</div>
+                <div>
+                    <div class="auth-title">HERMES ACCESS</div>
+                    <div class="auth-subtitle">Enter your access token to continue</div>
+                </div>
+            </div>
+
+            <div id="auth-remembered" class="auth-remembered">
+                <span>✓</span>
+                <span>Token recognised — verifying…</span>
+            </div>
+
+            <div class="auth-field">
+                <label for="token-input">Access Token</label>
+                <div class="token-row">
+                    <input id="token-input" type="password" placeholder="••••••••••••••••"
+                        autocomplete="current-password" spellcheck="false" />
+                    <button class="btn-peek" id="btn-peek" aria-label="Show token" title="Show / hide">👁</button>
+                </div>
+            </div>
+
+            <div id="auth-error" class="auth-error">Invalid token — access denied.</div>
+
+            <button class="btn-auth" id="btn-auth">
+                <span>UNLOCK</span>
+                <span id="auth-arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── App Shell (hidden until auth) ── -->
+    <div id="app-shell">
+        <div class="shell">
+
+            <!-- ── Header ── -->
+            <header>
+                <div class="logo">
+                    <span class="logo-glyph">⚡</span>
+                    <div class="logo-text">
+                        <span class="logo-name">HERMES</span>
+                        <span class="logo-sub">MEDIA DOWNLOADER</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="theme-toggle" aria-label="Toggle theme">
+                        <span id="theme-icon">☀</span>
+                        <span id="theme-label">LIGHT</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ── Main card ── -->
+            <main>
+                <div class="card">
+                    <div class="card-label">TARGET URL</div>
+                    <div class="url-row">
+                        <input id="url-input" type="url" placeholder="https://youtube.com/watch?v=…"
+                            autocomplete="off" spellcheck="false" />
+                        <button class="btn-clear" id="btn-clear" aria-label="Clear">✕</button>
+                    </div>
+
+                    <div class="card-label" style="margin-top:22px">FORMAT</div>
+                    <div class="format-grid">
+                        <button class="fmt-btn active" data-mode="mp4">
+                            <span class="fmt-icon">▶</span>
+                            <span class="fmt-title">MP4</span>
+                            <span class="fmt-desc">Best quality video</span>
+                        </button>
+                        <button class="fmt-btn" data-mode="mp3_full">
+                            <span class="fmt-icon">♫</span>
+                            <span class="fmt-title">MP3 FULL</span>
+                            <span class="fmt-desc">Audio + embedded art</span>
+                        </button>
+                        <button class="fmt-btn" data-mode="mp3_simple">
+                            <span class="fmt-icon">♩</span>
+                            <span class="fmt-title">MP3 SIMPLE</span>
+                            <span class="fmt-desc">Audio only, fast</span>
+                        </button>
+                    </div>
+
+                    <button class="btn-download" id="btn-download">
+                        <span id="dl-label">DOWNLOAD</span>
+                        <span class="dl-arrow" id="dl-arrow">→</span>
+                    </button>
+                </div>
+
+                <!-- ── Status ── -->
+                <div class="status-box" id="status-box">
+                    <div class="status-dot" id="status-dot"></div>
+                    <span id="status-text">Ready.</span>
+                </div>
+            </main>
+
+            <footer>
+                <span>HERMES v1.0</span>
+                <span class="footer-sep">·</span>
+                <span>powered by yt-dlp + ffmpeg</span>
+            </footer>
+
+        </div>
+    </div>
+
+    <script src="/public/js/dashboard.js"></script>
+    <script src="/public/js/auth.js"></script>
+</body>
+
+</html>
