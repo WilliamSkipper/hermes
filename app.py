@@ -10,7 +10,7 @@ import subprocess
 import json
 import zipfile
 import shutil
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, quote, parse_qs
 
 # ── Valid access tokens ───────────────────────────────────────────────────────
@@ -302,14 +302,19 @@ class Handler(BaseHTTPRequestHandler):
             except json.JSONDecodeError:
                 self.send_json(400, {"error": "Invalid JSON"})
                 return
-            url  = data.get("url",  "").strip()
-            mode = data.get("mode", "").strip()
+            url   = data.get("url",   "").strip()
+            mode  = data.get("mode",  "").strip()
+            token = data.get("token", "").strip()
         else:
-            # form-encoded: url=...&mode=...
+            # form-encoded: url=...&mode=...&token=...
             params = parse_qs(raw_body.decode("utf-8", errors="replace"))
-            url    = params.get("url",  [""])[0].strip()
-            mode   = params.get("mode", [""])[0].strip()
+            url    = params.get("url",   [""])[0].strip()
+            mode   = params.get("mode",  [""])[0].strip()
+            token  = params.get("token", [""])[0].strip()
 
+        if token not in VALID_TOKENS:
+            self.send_json(401, {"error": "Unauthorized"})
+            return
         if not url:
             self.send_json(400, {"error": "No URL provided"})
             return
@@ -374,8 +379,8 @@ class Handler(BaseHTTPRequestHandler):
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    PORT = 8080
-    server = HTTPServer(("0.0.0.0", PORT), Handler)
+    PORT = 8765
+    server = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
     print(f"  Hermes running  ->  http://localhost:{PORT}")
     print("  Ctrl+C to stop\n")
     try:

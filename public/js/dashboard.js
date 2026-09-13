@@ -78,8 +78,14 @@ function initDownload() {
         fMode.name  = 'mode';
         fMode.value = mode;
 
+        const fToken = document.createElement('input');
+        fToken.type  = 'hidden';
+        fToken.name  = 'token';
+        fToken.value = localStorage.getItem('hermes_token') || '';
+
         form.appendChild(fUrl);
         form.appendChild(fMode);
+        form.appendChild(fToken);
         document.body.appendChild(form);
 
         setStatus('pending', 'Processing… this may take a moment.');
