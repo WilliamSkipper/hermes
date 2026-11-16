@@ -1,133 +1,624 @@
 <!doctype html>
-<html lang="en">
-
-<head>
+<html lang="en" data-theme="dark">
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Hermes — Media Downloader</title>
-    <meta name="description"
-        content="Hermes — fast YouTube media downloader. Save as MP4, MP3 with art, or simple audio." />
-    <meta name="theme-color" content="#e8a020" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Hermes</title>
+    <meta
+      name="description"
+      content="Hermes is a precision media and stream extraction workstation powered by yt-dlp and FFmpeg."
+    />
+
+    <!-- Open Graph Metadata · Zero Double Dashes -->
+    <meta property="og:title" content="Hermes · Media Workstation" />
+    <meta
+      property="og:description"
+      content="High-performance media conversion for MP4 video and MP3 audio with embedded ID3v2 artwork."
+    />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://hermes.local" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hermes · Media Workstation" />
+    <meta
+      name="twitter:description"
+      content="High-performance media conversion for MP4 video and MP3 audio with embedded ID3v2 artwork."
+    />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- Favicon and Touch Icon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- LCP Performance: Preload Hero Background Plate -->
+    <link
+      rel="preload"
+      as="image"
+      href="/public/assets/hero-schematic.svg"
+      fetchpriority="high"
+      type="image/svg+xml"
+    />
+
     <link rel="stylesheet" href="/public/css/main.css" />
     <link rel="stylesheet" href="/public/css/auth.css" />
+
+    <!-- Early Theme Initialization -->
     <script>
-        (function () {
-            const t = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', t);
-        })();
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      })();
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <!-- William Skipper was here: https://william-skipper.site/ -->
 
-    <!-- ── Auth Gate ── -->
-    <div id="auth-gate">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-lock">🔑</div>
-                <div>
-                    <div class="auth-title">HERMES ACCESS</div>
-                    <div class="auth-subtitle">Enter your access token to continue</div>
-                </div>
-            </div>
+    <!-- Accessible Skip Navigation Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-            <div id="auth-remembered" class="auth-remembered">
-                <span>✓</span>
-                <span>Token recognised — verifying…</span>
-            </div>
-
-            <div class="auth-field">
-                <label for="token-input">Access Token</label>
-                <div class="token-row">
-                    <input id="token-input" type="password" placeholder="••••••••••••••••"
-                        autocomplete="current-password" spellcheck="false" />
-                    <button class="btn-peek" id="btn-peek" aria-label="Show token" title="Show / hide">👁</button>
-                </div>
-            </div>
-
-            <div id="auth-error" class="auth-error">Invalid token — access denied.</div>
-
-            <button class="btn-auth" id="btn-auth">
-                <span>UNLOCK</span>
-                <span id="auth-arrow">→</span>
-            </button>
-        </div>
+    <!-- Atmospheric Background Decorative Schematic -->
+    <div class="hero-bg" aria-hidden="true">
+      <img
+        src="/public/assets/hero-schematic.svg"
+        alt=""
+        class="hero-bg-img"
+        fetchpriority="high"
+      />
+      <div class="hero-vignette"></div>
     </div>
 
-    <!-- ── App Shell (hidden until auth) ── -->
-    <div id="app-shell">
-        <div class="shell">
-
-            <!-- ── Header ── -->
-            <header>
-                <div class="logo">
-                    <span class="logo-glyph">⚡</span>
-                    <div class="logo-text">
-                        <span class="logo-name">HERMES</span>
-                        <span class="logo-sub">MEDIA DOWNLOADER</span>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <button id="theme-toggle" aria-label="Toggle theme">
-                        <span id="theme-icon">☀</span>
-                        <span id="theme-label">LIGHT</span>
-                    </button>
-                </div>
-            </header>
-
-            <!-- ── Main card ── -->
-            <main>
-                <div class="card">
-                    <div class="card-label">TARGET URL</div>
-                    <div class="url-row">
-                        <input id="url-input" type="url" placeholder="https://youtube.com/watch?v=…"
-                            autocomplete="off" spellcheck="false" />
-                        <button class="btn-clear" id="btn-clear" aria-label="Clear">✕</button>
-                    </div>
-
-                    <div class="card-label" style="margin-top:22px">FORMAT</div>
-                    <div class="format-grid">
-                        <button class="fmt-btn active" data-mode="mp4">
-                            <span class="fmt-icon">▶</span>
-                            <span class="fmt-title">MP4</span>
-                            <span class="fmt-desc">Best quality video</span>
-                        </button>
-                        <button class="fmt-btn" data-mode="mp3_full">
-                            <span class="fmt-icon">♫</span>
-                            <span class="fmt-title">MP3 FULL</span>
-                            <span class="fmt-desc">Audio + embedded art</span>
-                        </button>
-                        <button class="fmt-btn" data-mode="mp3_simple">
-                            <span class="fmt-icon">♩</span>
-                            <span class="fmt-title">MP3 SIMPLE</span>
-                            <span class="fmt-desc">Audio only, fast</span>
-                        </button>
-                    </div>
-
-                    <button class="btn-download" id="btn-download">
-                        <span id="dl-label">DOWNLOAD</span>
-                        <span class="dl-arrow" id="dl-arrow">→</span>
-                    </button>
-                </div>
-
-                <!-- ── Status ── -->
-                <div class="status-box" id="status-box">
-                    <div class="status-dot" id="status-dot"></div>
-                    <span id="status-text">Ready.</span>
-                </div>
-            </main>
-
-            <footer>
-                <span>HERMES v1.0</span>
-                <span class="footer-sep">·</span>
-                <span>powered by yt-dlp + ffmpeg</span>
-            </footer>
-
+    <!-- ── Auth Gate Modal ── -->
+    <div
+      id="auth-gate"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="auth-modal-title"
+    >
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-icon-frame" aria-hidden="true">
+            <svg
+              class="icon-lg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div class="auth-header-text">
+            <h1 id="auth-modal-title" class="auth-title">HERMES ACCESS</h1>
+            <p class="auth-subtitle">
+              Provide your authorization token to initialize workstation access
+            </p>
+          </div>
         </div>
+
+        <!-- Decoy inputs to prevent browser credential popups on sensitive token -->
+        <input
+          type="text"
+          name="fake_username"
+          style="display: none"
+          tabindex="-1"
+          autocomplete="off"
+        />
+        <input
+          type="password"
+          name="fake_password"
+          style="display: none"
+          tabindex="-1"
+          autocomplete="new-password"
+        />
+
+        <div
+          id="auth-remembered"
+          class="auth-banner auth-banner-success"
+          role="status"
+          aria-live="polite"
+        >
+          <svg
+            class="icon-sm"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Cached token identified · Verifying credentials…</span>
+        </div>
+
+        <div class="auth-field">
+          <label for="token-input" class="field-label">Access Token</label>
+          <div class="token-input-group">
+            <input
+              id="token-input"
+              type="password"
+              placeholder="Enter session token…"
+              autocomplete="new-password"
+              data-1p-ignore="true"
+              data-bwignore="true"
+              data-lpignore="true"
+              data-form-type="other"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+            />
+            <button
+              type="button"
+              class="btn-input-action"
+              id="btn-peek"
+              aria-label="Show token"
+              title="Show or hide token"
+            >
+              <svg
+                class="icon-sm icon-peek-show"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg
+                class="icon-sm icon-peek-hide"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                style="display: none"
+              >
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                ></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="auth-error" class="auth-banner auth-banner-error" role="alert">
+          <svg
+            class="icon-sm"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>Authorization failed · Invalid token provided.</span>
+        </div>
+
+        <button type="button" class="btn-primary" id="btn-auth">
+          <span id="auth-btn-label">UNLOCK WORKSTATION</span>
+          <svg
+            class="icon-sm icon-arrow"
+            id="auth-arrow"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── App Shell ── -->
+    <div id="app-shell" class="app-shell">
+      <div class="shell-container">
+        <!-- ── Workstation Header ── -->
+        <header class="workstation-header">
+          <div class="brand-group">
+            <div class="brand-symbol" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" class="brand-svg">
+                <rect
+                  width="32"
+                  height="32"
+                  rx="4"
+                  fill="var(--bg-canvas)"
+                ></rect>
+                <rect
+                  x="1"
+                  y="1"
+                  width="30"
+                  height="30"
+                  rx="3"
+                  stroke="var(--border-base)"
+                  stroke-width="1"
+                ></rect>
+                <path d="M7 21L16 6L16 11L11 21Z" fill="var(--accent)"></path>
+                <path d="M25 21L16 6L16 11L21 21Z" fill="var(--accent)"></path>
+                <path
+                  d="M16 10L17.5 22L16 25L14.5 22Z"
+                  fill="var(--text-1)"
+                ></path>
+              </svg>
+            </div>
+            <div class="brand-headings">
+              <span class="brand-title">HERMES</span>
+              <span class="brand-subtitle">STREAM EXTRACTION WORKSTATION</span>
+            </div>
+          </div>
+
+          <div class="header-controls">
+            <!-- Theme toggle control -->
+            <button
+              type="button"
+              id="theme-toggle"
+              class="btn-theme"
+              aria-label="Toggle color theme"
+            >
+              <svg
+                id="theme-icon-sun"
+                class="icon-sm"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg
+                id="theme-icon-moon"
+                class="icon-sm"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                style="display: none"
+              >
+                <path
+                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                ></path>
+              </svg>
+              <span id="theme-label" class="theme-label-text">LIGHT</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- ── Main Workspace ── -->
+        <main id="main-content">
+          <section class="console-card">
+            <!-- URL Input Block -->
+            <div class="panel-section">
+              <div class="section-kicker">
+                <span>TARGET STREAM URL</span>
+                <span class="section-kicker-hint"
+                  >YOUTUBE / PLAYLIST SUPPORTED</span
+                >
+              </div>
+              <div class="url-input-container">
+                <label for="url-input" class="sr-only"
+                  >Target stream or video URL</label
+                >
+                <input
+                  id="url-input"
+                  type="url"
+                  placeholder="Paste YouTube video or playlist link…"
+                  autocomplete="off"
+                  spellcheck="false"
+                  autocapitalize="none"
+                  autocorrect="off"
+                />
+                <div class="input-actions-group">
+                  <button
+                    type="button"
+                    class="btn-input-action"
+                    id="btn-paste"
+                    aria-label="Paste URL from clipboard"
+                    title="Paste from clipboard"
+                  >
+                    <svg
+                      class="icon-sm"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                      ></path>
+                      <rect
+                        x="8"
+                        y="2"
+                        width="8"
+                        height="4"
+                        rx="1"
+                        ry="1"
+                      ></rect>
+                    </svg>
+                    <span class="btn-input-text">PASTE</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-input-action"
+                    id="btn-clear"
+                    aria-label="Clear URL field"
+                    title="Clear input"
+                  >
+                    <svg
+                      class="icon-sm"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Format Selection Grid -->
+            <div class="panel-section">
+              <div class="section-kicker">
+                <span>FORMAT</span>
+                <span class="section-kicker-hint">CHOOSE DOWNLOAD TYPE</span>
+              </div>
+              <div
+                class="format-grid"
+                role="radiogroup"
+                aria-label="Format selection"
+              >
+                <button
+                  type="button"
+                  class="fmt-btn active"
+                  data-mode="mp4"
+                  role="radio"
+                  aria-checked="true"
+                >
+                  <div class="fmt-header">
+                    <svg
+                      class="fmt-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                      <polygon
+                        points="10 8 15 11 10 14 10 8"
+                        fill="currentColor"
+                        stroke="none"
+                      ></polygon>
+                      <line x1="2" y1="21" x2="22" y2="21"></line>
+                    </svg>
+                    <span class="fmt-code">MP4</span>
+                  </div>
+                  <span class="fmt-title">Video</span>
+                  <span class="fmt-meta">Full video with sound</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="fmt-btn"
+                  data-mode="mp3_full"
+                  role="radio"
+                  aria-checked="false"
+                >
+                  <div class="fmt-header">
+                    <svg
+                      class="fmt-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <span class="fmt-code">MP3</span>
+                  </div>
+                  <span class="fmt-title">Music</span>
+                  <span class="fmt-meta"
+                    >Audio with album cover &amp; tags</span
+                  >
+                </button>
+
+                <button
+                  type="button"
+                  class="fmt-btn"
+                  data-mode="mp3_simple"
+                  role="radio"
+                  aria-checked="false"
+                >
+                  <div class="fmt-header">
+                    <svg
+                      class="fmt-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 10v4"></path>
+                      <path d="M6 7v10"></path>
+                      <path d="M10 4v16"></path>
+                      <path d="M14 8v8"></path>
+                      <path d="M18 5v14"></path>
+                      <path d="M22 10v4"></path>
+                    </svg>
+                    <span class="fmt-code">MP3</span>
+                  </div>
+                  <span class="fmt-title">Audio</span>
+                  <span class="fmt-meta">Sound only, fast download</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Execution Trigger -->
+            <button
+              type="button"
+              class="btn-primary btn-execute"
+              id="btn-download"
+            >
+              <svg
+                class="icon-sm"
+                id="dl-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span id="dl-label">INITIALIZE CONVERSION</span>
+              <span class="key-hint" aria-hidden="true">↵ ENTER</span>
+            </button>
+          </section>
+
+          <!-- ── Real-Time Workstation Status Console ── -->
+          <div
+            class="status-console"
+            id="status-box"
+            role="status"
+            aria-live="polite"
+          >
+            <div class="status-indicator">
+              <span class="status-badge" id="status-badge">READY</span>
+            </div>
+            <div class="status-body">
+              <span id="status-text" class="status-message"
+                >Workstation idle. Awaiting target stream URL.</span
+              >
+            </div>
+          </div>
+        </main>
+
+        <!-- ── Persistent Global Footer ── -->
+        <footer class="workstation-footer">
+          <nav class="footer-nav" aria-label="Workstation references">
+            <button type="button" class="footer-link" id="btn-open-specs">
+              Specs
+            </button>
+            <button type="button" class="footer-link" id="btn-open-privacy">
+              Privacy
+            </button>
+            <button
+              type="button"
+              class="footer-link"
+              id="btn-open-accessibility"
+            >
+              Accessibility
+            </button>
+          </nav>
+        </footer>
+      </div>
+    </div>
+
+    <!-- ── System Dialog Modal (Specs / Privacy / Accessibility) ── -->
+    <div
+      id="system-modal"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      style="display: none"
+    >
+      <div class="modal-scrim" id="modal-scrim"></div>
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="modal-title" class="modal-title">SPECIFICATIONS</h2>
+          <button
+            type="button"
+            class="btn-modal-close"
+            id="btn-close-modal"
+            aria-label="Close dialog"
+          >
+            <svg
+              class="icon-sm"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div id="modal-content" class="modal-body">
+          <!-- Dynamically populated -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-action" id="btn-dismiss-modal">
+            CLOSE
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="/public/js/dashboard.js"></script>
     <script src="/public/js/auth.js"></script>
-</body>
-
+  </body>
 </html>

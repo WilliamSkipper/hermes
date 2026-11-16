@@ -29,17 +29,17 @@ pip install -r requirements.txt
 Start the server:
 
 ```bash
-python server.py
+python app.py
 ```
 
-The application runs on port **8080**.
+The application runs on port **8765**.
 
 ## Access
 
 Open:
 
 ```text
-http://localhost:8080
+http://localhost:8765
 ```
 
 ## Download Modes

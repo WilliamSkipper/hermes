@@ -226,10 +226,9 @@ BASE   = os.path.dirname(os.path.abspath(__file__))
 STATIC = {
     "/":                       os.path.join(BASE, "public", "html", "index.html"),
     "/index.html":             os.path.join(BASE, "public", "html", "index.html"),
-    "/public/css/main.css":    os.path.join(BASE, "public", "css",  "main.css"),
-    "/public/css/auth.css":    os.path.join(BASE, "public", "css",  "auth.css"),
-    "/public/js/dashboard.js": os.path.join(BASE, "public", "js",   "dashboard.js"),
-    "/public/js/auth.js":      os.path.join(BASE, "public", "js",   "auth.js"),
+    "/favicon.svg":            os.path.join(BASE, "public", "favicon.svg"),
+    "/apple-touch-icon.png":   os.path.join(BASE, "public", "apple-touch-icon.png"),
+    "/og-image.png":           os.path.join(BASE, "public", "og-image.png"),
 }
 MIME_MAP = {
     ".html": "text/html; charset=utf-8",
@@ -237,6 +236,11 @@ MIME_MAP = {
     ".js":   "application/javascript; charset=utf-8",
     ".png":  "image/png",
     ".ico":  "image/x-icon",
+    ".svg":  "image/svg+xml",
+    ".webp": "image/webp",
+    ".jpg":  "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".json": "application/json",
 }
 
 # ── Request handler ───────────────────────────────────────────────────────────
@@ -257,16 +261,24 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path = urlparse(self.path).path
         fp = STATIC.get(path)
-        if not fp:
+        if not fp and path.startswith("/public/"):
+            rel_path = os.path.normpath(path.lstrip("/"))
+            target_path = os.path.join(BASE, rel_path)
+            if os.path.commonpath([BASE, target_path]) == BASE and os.path.isfile(target_path):
+                fp = target_path
+
+        if not fp or not os.path.isfile(fp):
             self.send_error(404)
             return
-        ext = os.path.splitext(fp)[1]
+
+        ext = os.path.splitext(fp)[1].lower()
         try:
             with open(fp, "rb") as f:
                 body = f.read()
             self.send_response(200)
-            self.send_header("Content-Type", MIME_MAP.get(ext, "text/plain"))
+            self.send_header("Content-Type", MIME_MAP.get(ext, "application/octet-stream"))
             self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-cache")
             self.end_headers()
             self.wfile.write(body)
         except FileNotFoundError:

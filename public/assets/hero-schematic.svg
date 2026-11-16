@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" fill="none" aria-hidden="true">
+  <!-- Precision Background Technical Plate -->
+  <defs>
+    <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#18181b" stroke-width="0.75"/>
+      <circle cx="0" cy="0" r="0.8" fill="#27272a"/>
+    </pattern>
+    <pattern id="major-grid" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#222226" stroke-width="1.2"/>
+      <path d="M 0 10 L 0 0 10 0 M 190 0 L 200 0 200 10 M 200 190 L 200 200 190 200 M 10 200 L 0 200 0 190" fill="none" stroke="#3f3f46" stroke-width="1.5"/>
+    </pattern>
+    <linearGradient id="stream-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#27272a" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="#3f3f46" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#27272a" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="accent-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e87a20" stop-opacity="0.1"/>
+      <stop offset="50%" stop-color="#e87a20" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#e87a20" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Grid layers -->
+  <rect width="100%" height="100%" fill="#09090b"/>
+  <rect width="100%" height="100%" fill="url(#grid-pattern)"/>
+  <rect width="100%" height="100%" fill="url(#major-grid)"/>
+
+  <!-- Top Telemetry & Coordinate Ticks -->
+  <g stroke="#3f3f46" stroke-width="1" font-family="monospace" font-size="11" fill="#71717a">
+    <!-- Horizontal Axis Markers -->
+    <line x1="80" y1="60" x2="1520" y2="60" stroke="#27272a"/>
+    <line x1="200" y1="52" x2="200" y2="68"/>
+    <line x1="400" y1="55" x2="400" y2="65"/>
+    <line x1="600" y1="52" x2="600" y2="68"/>
+    <line x1="800" y1="55" x2="800" y2="65"/>
+    <line x1="1000" y1="52" x2="1000" y2="68"/>
+    <line x1="1200" y1="55" x2="1200" y2="65"/>
+    <line x1="1400" y1="52" x2="1400" y2="68"/>
+    <text x="204" y="50" stroke="none">00:00:15:00</text>
+    <text x="604" y="50" stroke="none">00:01:30:00</text>
+    <text x="1004" y="50" stroke="none">00:03:00:00</text>
+    <text x="1404" y="50" stroke="none">CH-SYNC: 48.0 KHZ</text>
+
+    <!-- Vertical Axis Markers -->
+    <line x1="60" y1="80" x2="60" y2="820" stroke="#27272a"/>
+    <line x1="52" y1="200" x2="68" y2="200"/>
+    <line x1="55" y1="400" x2="65" y2="400"/>
+    <line x1="52" y1="600" x2="68" y2="600"/>
+    <line x1="55" y1="800" x2="65" y2="800"/>
+    <text x="74" y="204" stroke="none">BAND A: +12 dB</text>
+    <text x="74" y="404" stroke="none">VBR REF: 192K</text>
+    <text x="74" y="604" stroke="none">MUX PACKET 0x4F</text>
+  </g>
+
+  <!-- Demux Pipeline Schematic Lines -->
+  <g stroke="url(#stream-fade)" stroke-width="1.5" fill="none">
+    <!-- Stream Bus 1 -->
+    <path d="M 120 180 L 360 180 L 440 260 L 960 260 L 1040 180 L 1480 180"/>
+    <!-- Stream Bus 2 -->
+    <path d="M 120 720 L 420 720 L 500 640 L 980 640 L 1060 720 L 1480 720"/>
+  </g>
+
+  <!-- Accent Demux Route -->
+  <path d="M 280 260 L 520 260 L 600 340 L 1100 340 L 1180 260 L 1400 260" stroke="url(#accent-fade)" stroke-width="1.5" fill="none"/>
+
+  <!-- Audio Spectrum Waveform Graph (Background Layer) -->
+  <g stroke="#27272a" stroke-width="1.5" fill="none">
+    <path d="M 140 450 Q 200 380, 260 450 T 380 450 T 500 450 T 620 450 T 740 450 T 860 450 T 980 450 T 1100 450 T 1220 450 T 1340 450 T 1460 450"/>
+    <path d="M 140 470 Q 220 320, 300 470 T 460 470 T 620 470 T 780 470 T 940 470 T 1100 470 T 1260 470 T 1420 470" stroke="#1f1f23"/>
+  </g>
+
+  <!-- Signal Node Blocks & Calibration Reticles -->
+  <g stroke="#3f3f46" stroke-width="1" fill="#121215">
+    <rect x="220" y="248" width="24" height="24"/>
+    <rect x="588" y="328" width="24" height="24"/>
+    <rect x="1088" y="328" width="24" height="24"/>
+    <rect x="1340" y="248" width="24" height="24"/>
+
+    <circle cx="232" cy="260" r="3" fill="#e87a20" stroke="none"/>
+    <circle cx="600" cy="340" r="3" fill="#a1a1aa" stroke="none"/>
+    <circle cx="1100" cy="340" r="3" fill="#a1a1aa" stroke="none"/>
+    <circle cx="1352" cy="260" r="3" fill="#e87a20" stroke="none"/>
+  </g>
+
+  <!-- Calibration Reticles in Corners -->
+  <g stroke="#3f3f46" stroke-width="1" fill="none">
+    <circle cx="120" cy="120" r="28"/>
+    <line x1="84" y1="120" x2="156" y2="120"/>
+    <line x1="120" y1="84" x2="120" y2="156"/>
+
+    <circle cx="1480" cy="120" r="28"/>
+    <line x1="1444" y1="120" x2="1516" y2="120"/>
+    <line x1="1480" y1="84" x2="1480" y2="156"/>
+
+    <circle cx="120" cy="780" r="28"/>
+    <line x1="84" y1="780" x2="156" y2="780"/>
+    <line x1="120" y1="744" x2="120" y2="816"/>
+
+    <circle cx="1480" cy="780" r="28"/>
+    <line x1="1444" y1="780" x2="1516" y2="780"/>
+    <line x1="1480" y1="744" x2="1480" y2="816"/>
+  </g>
+</svg>
+
